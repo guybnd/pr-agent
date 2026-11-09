@@ -108,6 +108,7 @@ SECTION_DOCS = {
     ),
     "jira": ("Ticket context", "../core-abilities/fetching_ticket_context.md#jira-integration"),
     "litellm": ("Changing a model", "../usage-guide/changing_a_model.md#changing-a-model-in-pr-agent"),
+    "claude_code": ("Claude Code CLI", "../usage-guide/changing_a_model.md#claude-code-cli"),
     "bedrock": ("Amazon Bedrock", "../usage-guide/changing_a_model.md#amazon-bedrock"),
     "openrouter": ("OpenRouter", "../usage-guide/changing_a_model.md#openrouter"),
     "model_routing": (

@@ -29,6 +29,8 @@ REPO_OVERRIDABLE_KEYS_BY_HOST_SECTION = {
     "prompt_fragments": frozenset(),
     "bedrock": frozenset(),
     "custom_labels": frozenset(),
+    # claude_code runs a host executable with host credentials, so the whole section is host-only.
+    "claude_code": frozenset(),
 }
 
 _CONNECTION_KEY_SUFFIXES = ("url", "base_url", "endpoint", "org", "key", "token", "secret")
@@ -120,6 +122,8 @@ REPO_HOST_ONLY_KEYS_BY_SECTION = {
         "repo_context_sibling_repos",
         "num_retries",
         "system_instructions",
+        # ai_handler picks the model backend and the host credentials it uses.
+        "ai_handler",
     }),
 }
 

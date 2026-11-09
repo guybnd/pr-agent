@@ -332,6 +332,27 @@ KEY = "..."
 
 See [litellm](https://docs.litellm.ai/docs/providers/anthropic#usage) documentation for more information about the environment variables required for Anthropic.
 
+### Claude Code CLI
+
+A self-hosted PR-Agent can send its model calls through a local [Claude Code](https://code.claude.com/docs) CLI
+instead of a provider API. Each call runs `claude -p` with all tools disabled, from an empty working directory, so
+it authenticates with the host's Claude Code login rather than an API key.
+
+```toml
+[config]
+ai_handler="claude_code"
+model="claude-sonnet-5-5"
+fallback_models=["claude-opus-5-5"]
+```
+
+Install Claude Code on the host and sign it in. For servers and containers, run `claude setup-token` once on a
+machine with a browser and pass the printed token as the `CLAUDE_CODE_OAUTH_TOKEN` environment variable.
+`ANTHROPIC_API_KEY` is removed from the CLI's environment unless `claude_code.use_api_key=true`.
+
+`config.ai_handler` and the `[claude_code]` section are host-only: a repository's `.pr_agent.toml` and comment
+arguments cannot change them. Image inputs are not supported, and `temperature` is ignored. Usage counts against
+the signed-in account's Claude Code limits.
+
 ### Amazon Bedrock
 
 To use Amazon Bedrock and its foundational models, add the below configuration:

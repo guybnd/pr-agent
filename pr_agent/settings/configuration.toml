@@ -7,6 +7,7 @@ max_webhook_request_body_bytes = 5242880 # maximum request body accepted by webh
 # models
 model="gpt-6.1-sol"
 fallback_models=["gpt-6-luna"]
+ai_handler="litellm" # host-only model backend: "litellm" (provider APIs) or "claude_code" (local Claude Code CLI, see [claude_code])
 #model_reasoning="gpt-6.1-sol" # dedicated reasoning model for self-reflection
 # Leave model_weak unset with the shipped fallbacks: Luna would retry Luna, not a distinct model.
 #model_weak="gpt-6-luna" # optional, a weaker model to use for some easier tasks
@@ -579,6 +580,14 @@ reasoning_effort = ""
 # Keep max_tokens greater than the reasoning budget where the provider requires it.
 reasoning_max_tokens = 0
 max_tokens = 0 # hard cap on completion tokens for the request; 0 = unset
+
+# Claude Code CLI backend, used when config.ai_handler="claude_code". The whole section is host-only.
+[claude_code]
+cli_path="claude" # Claude Code executable name or path
+model="" # optional model passed to `claude --model`, overriding config.model and fallback_models; empty uses the configured model
+extra_args=[] # extra arguments appended to every `claude -p` call
+use_api_key=false # when false, ANTHROPIC_API_KEY is removed from the CLI's environment so the subscription login is used
+max_retries=2 # same-model retries when the API reports overload or a server error (0-5)
 
 [model_routing] # send a small pull request to a cheaper primary model (disabled by default)
 # Set true to route small pull requests to a cheaper primary model. See [changing a model](changing_a_model.md).

@@ -31,6 +31,7 @@ See [Configuration options](../usage-guide/configuration_options.md#global-confi
 | --- | --- | --- |
 | `model` | "gpt-6.1-sol" |  |
 | `fallback_models` | ["gpt-6-luna"] |  |
+| `ai_handler` | "litellm" | host-only model backend: "litellm" (provider APIs) or "claude_code" (local Claude Code CLI, see [claude_code]) |
 **CLI**
 
 | Key | Default | Description |
@@ -548,6 +549,19 @@ See [OpenRouter](../usage-guide/changing_a_model.md#openrouter).
 | `reasoning_effort` | "" | Invalid reasoning_effort values are warned about and treated as unset. Empty inherits config.reasoning_effort for reasoning-capable models (probed against litellm's bundled reasoning metadata or the Grok registry, or listed in additional_reasoning_effort_models). Valid values: "none", "minimal", "low", "medium", "high", "xhigh", "max". OpenRouter normalizes "max" to "xhigh" for LiteLLM/OpenRouter compatibility. Model-specific support varies. For models not covered by PR-Agent's clamps, do not assume "none" disables reasoning; check the selected model and provider's support. |
 | `reasoning_max_tokens` | 0 | Use a positive value to override global effort and non-none OpenRouter-specific efforts. Keep reasoning disabled for explicit openrouter.reasoning_effort = "none", except on Grok 4.5/4.6, Gemini 3.7/3.8 Flash, and the GPT-6 models whose pages omit "none" (GPT-6 Astra and GPT-6.1 Sol). Clamp "none" to the lowest supported effort there before applying the budget, so a positive budget wins. Keep max_tokens greater than the reasoning budget where the provider requires it. |
 | `max_tokens` | 0 | hard cap on completion tokens for the request; 0 = unset |
+
+
+## `[claude_code]` {#claude_code}
+
+See [Claude Code CLI](../usage-guide/changing_a_model.md#claude-code-cli).
+
+| Key | Default | Description |
+| --- | --- | --- |
+| `cli_path` | "claude" | Claude Code executable name or path |
+| `model` | "" | optional model passed to `claude --model`, overriding config.model and fallback_models; empty uses the configured model |
+| `extra_args` | [] | extra arguments appended to every `claude -p` call |
+| `use_api_key` | false | when false, ANTHROPIC_API_KEY is removed from the CLI's environment so the subscription login is used |
+| `max_retries` | 2 | same-model retries when the API reports overload or a server error (0-5) |
 
 
 ## `[model_routing]` — send a small pull request to a cheaper primary model (disabled by default) {#model_routing-send a small pull request to a cheaper primary model (disabled by default)}

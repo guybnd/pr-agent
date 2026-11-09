@@ -369,9 +369,21 @@ async def _serialize_tool_initialization(pr_url):
             _tool_initialization_locks[key] = (lock, users - 1)
 
 
+def default_ai_handler():
+    """Return the handler factory selected by the host-only `config.ai_handler` setting."""
+    name = str(get_settings().get("config.ai_handler", "litellm") or "litellm").strip().lower()
+    if name == "claude_code":
+        from pr_agent.algo.ai_handlers.claude_code_ai_handler import ClaudeCodeAIHandler
+        return ClaudeCodeAIHandler
+    if name != "litellm":
+        get_logger().warning(f"Unknown config.ai_handler '{name}', using litellm")
+    return LiteLLMAIHandler
+
+
 class PRAgent:
-    def __init__(self, ai_handler: partial[BaseAiHandler,] = LiteLLMAIHandler):
-        self.ai_handler = ai_handler  # handler factory passed to each tool when it is instantiated
+    def __init__(self, ai_handler: partial[BaseAiHandler,] | None = None):
+        # handler factory passed to each tool when it is instantiated
+        self.ai_handler = ai_handler if ai_handler is not None else default_ai_handler()
 
     async def _create_tool(self, tool_class, pr_url, **kwargs):
         """Offload isolated core-tool setup while preserving its cancellation boundary."""
